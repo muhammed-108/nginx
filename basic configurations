@@ -1,0 +1,54 @@
+Step 1 Modify global configurations.
+The default global configurations in the main configuration file are as follows:
+user nginx;
+worker_processes auto;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+change to that
+user nobody;
+worker_processes 4;
+error_log /var/log/nginx/error.log;
+pid /run/nginx.pid;
+
+nginx -s reload
+ps -ef | grep nginx
+
+Step 2 Access static web resources.
+Requirement: Use the domain name www.test.com to access the specified home page of
+the NGINX service and the specified image file and TXT file.
+Run the following command to create a directory for storing static resources:
+mkdir -p /data/Nginx
+
+Create a home page file index.html in NGINX and enter "hello,openEuler".
+touch /data/Nginx/index.html
+echo "hello,openEuler" > /data/Nginx/index.html
+Create a test.txt file in the Nginx directory and enter "hello,Nginx".
+touch /data/Nginx/test.txt
+echo "hello,Nginx" > /data/Nginx/test.txt
+Copy nginx-logo.png in /usr/share/Nginx/html to the Nginx directory.
+cp /usr/share/nginx/html/nginx-logo.png /data/Nginx/
+After the configuration is complete, the files in the Nginx directory are as follows:
+[root@localhost nginx]# ls /data/Nginx/
+index.html nginx-logo.png test.txt
+In the /etc/nginx/conf.d directory, create a configuration file static.conf for the new
+static website and configure the following content:
+server {
+listen 81;
+server_name www.test.com;
+root /data/Nginx;
+index index.html;
+}
+you can use that too
+
+server {
+listen 81;
+server_name www.test.com;
+location / {
+ root /data/Nginx;
+index index.html;
+}
+}
+
+
+
+then nginx -t check 
