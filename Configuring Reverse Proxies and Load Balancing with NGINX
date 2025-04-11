@@ -1,0 +1,67 @@
+Step 1 Set virtual host 1 as the proxy of virtual host 3.
+Modify the vhost.conf file as follows:
+server {
+ listen 81;
+ server_name localhost;
+ location / {
+ proxy_pass http://127.0.0.1:83;
+# root /data;
+# index index.html;
+ }
+}
+server {
+ listen 82;
+ server_name localhost;
+ location /nginx2 {
+ alias /data/nginx2/index.html;
+# index index.html;
+ }
+}
+server {
+ listen 83;
+ server_name localhost;
+ location / {
+ root /data/nginx3;
+ index index.html;
+ }
+}
+
+
+Step 2 Verify the configurations.
+Run the curl localhost:81 command to access the corresponding resource and check the
+returned information, as shown in the following figure
+
+
+Step 3 Set virtual host 1 as the proxy of virtual host 2.
+Modify the vhost.conf file as follows:
+server {
+ listen 81;
+ server_name localhost;
+ location /nginx1 {
+ proxy_pass http://127.0.0.1:82/nginx2;
+# root /data;
+# index index.html;
+ }
+}
+server {
+ listen 82;
+ server_name localhost;
+ location /nginx2 {
+ alias /data/nginx2/index.html;
+# index index.html;
+ }
+}
+server {
+ listen 83;
+ server_name localhost;
+ location / {
+ root /data/nginx3;
+ index index.html;
+ }
+}
+
+
+Step 4 Verify the configurations.
+Run the curl localhost:81/nginx1 command to access the corresponding resource and
+check the returned information, as shown in the following figure.
+
