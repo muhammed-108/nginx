@@ -1,0 +1,98 @@
+Step 1 Prepare resources.
+Restore the vhost.conf file to the content in step 2 in section "Configuring Virtual Hosts."
+The details are as follows:
+server {
+ listen 81;
+ server_name localhost;
+ location / {
+ root /data/nginx1;
+ index index.html;
+ }
+}
+server {
+ listen 82;
+ server_name localhost;
+ location / {
+ root /data/nginx2;
+ index index.html;
+ }
+}
+server {
+ listen 83;
+ server_name localhost;
+ location / {
+ root /data/nginx3;
+ index index.html;
+ }
+}
+
+Restore Nginx1 to nginx1. After the restoration, the /data directory is as follows.
+
+
+Step 2 Configure load balancing.
+Create a load balancing configuration file lb.conf in the conf.d directory and enter the
+following content:
+upstream www.test.com {
+ server 192.168.1.12:81;
+ server 192.168.1.12:82;
+ server 192.168.1.12:83;
+}
+server {
+ location / {
+ proxy_pass http://www.test.com;
+ }
+}
+
+Step 3 Verify the configurations.
+Run the curl www.test.com command on the server for multiple times and check the
+returned information, as shown in the following figure.
+
+Step 4 Configure weights.
+Modify the lb.conf file to add weights for load balancing as follows:
+upstream www.test.com {
+ server 192.168.1.12:81 weight=2;
+ server 192.168.1.12:82 weight=1;
+ server 192.168.1.12:83;
+}
+server {
+ location / {
+ proxy_pass http://www.test.com;
+ }
+
+
+Step 5 Verify the configurations.
+Run the curl www.test.com command on the server for multiple times and check the
+returned information, as shown in the following figure.
+
+
+Step 6 Configure the backup NGINX server.
+Modify the lb.conf configuration file as follows:
+upstream www.test.com {
+ server 192.168.1.12:81 backup;
+ server 192.168.1.12:82;
+ server 192.168.1.12:83;
+}
+server {
+ location / {
+ proxy_pass http://www.test.com;
+ }
+}
+
+
+step 7 tanha curl krdna
+
+Step 6 Configure the backup NGINX server.
+Modify the lb.conf configuration file as follows:
+upstream www.test.com {
+ server 192.168.1.12:81 backup;
+ server 192.168.1.12:82;
+ server 192.168.1.12:83;
+}
+server {
+ location / {
+ proxy_pass http://www.test.com;
+ }
+}
+
+
+
