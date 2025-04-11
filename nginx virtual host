@@ -1,0 +1,43 @@
+ama la data drus akay
+Step 1 Prepare resources.
+Create the nginx1, nginx2, and nginx3 directories in the /data directory.
+
+echo "hello,nginx1" > nginx1/index.html
+echo "hello,nginx2" > nginx2/index.html
+echo "hello,nginx3" > nginx3/index.html
+
+
+
+Step 2 Configure virtual hosts.
+To avoid interference between configurations, delete the existing configuration file in
+/etc/nginx/conf.d or change the file name extension to .bk.
+Create a configuration file vhost.conf and enter the following content:
+server {
+ listen 81;
+ server_name localhost;
+ location / {
+ root /data/nginx1;
+ index index.html;
+ }
+}
+server {
+ listen 82;
+ server_name localhost;
+ location / {
+ root /data/nginx2;
+ index index.html;
+ }
+}
+server {
+ listen 83;
+ server_name localhost;
+ location / {
+ root /data/nginx3;
+ index index.html;
+ }
+}
+
+Step 3 Verify the configurations.
+Run the curl command to configure virtual hosts with different ports, as shown in the
+following figure.
+
